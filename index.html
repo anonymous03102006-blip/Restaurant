@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Healthy Millet Recipe Cards</title>
+
+<style>
+:root{
+  --bg:#0b1220;
+  --cardTop:#0f172a;
+  --cardBottom:#050b17;
+  --stroke:rgba(255,255,255,.10);
+  --stroke2:rgba(255,255,255,.18);
+  --text:rgba(255,255,255,.92);
+  --muted:rgba(255,255,255,.66);
+  --shadow:0 18px 55px rgba(0,0,0,.55);
+  --radius:20px;
+  --accent:#22c55e;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  color:var(--text);
+  background:
+    radial-gradient(1100px 650px at 12% 0%, rgba(99,102,241,.18), transparent 60%),
+    radial-gradient(900px 650px at 100% 10%, rgba(34,197,94,.10), transparent 55%),
+    var(--bg);
+  min-height:100vh;
+}
+
+.container{
+  max-width:1400px;
+  margin:auto;
+  padding:26px 16px 50px;
+}
+
+.topbar{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+}
+
+h1{
+  margin:0;
+  font-size:clamp(22px,2.6vw,36px);
+  letter-spacing:.2px;
+}
+.sub{
+  margin:6px 0 0;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.controls{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.pill{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 30px rgba(0,0,0,.25);
+}
+
+.pill input{
+  all:unset;
+  width:220px;
+  font-size:14px;
+  color:var(--text);
+}
+.pill input::placeholder{ color:rgba(255,255,255,.45); }
+@media(max-width:520px){ .pill input{ width:150px; } }
+
+.count{
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.05);
+  color:rgba(255,255,255,.78);
+  font-size:13px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:18px;
+}
+@media(max-width:1100px){ .grid{ grid-template-columns:repeat(3,1fr); } }
+@media(max-width:800px){ .grid{ grid-template-columns:repeat(2,1fr); } }
+@media(max-width:450px){ .grid{ grid-template-columns:1fr; } }
+
+.card{
+  border-radius:var(--radius);
+  overflow:hidden;
+  border:1px solid var(--stroke);
+  background:linear-gradient(180deg, var(--cardTop), var(--cardBottom));
+  box-shadow:var(--shadow);
+  transition: transform .15s ease, border-color .15s ease;
+  display:flex;
+  flex-direction:column;
+}
+.card:hover{
+  transform: translateY(-4px);
+  border-color:var(--stroke2);
+}
+
+.thumb{
+  width:100%;
+  aspect-ratio:1/1;
+  object-fit:cover;
+  display:block;
+  cursor:pointer;
+}
+
+.body{
+  padding:12px 14px 8px;
+}
+.title{
+  font-size:15px;
+  font-weight:650;
+  line-height:1.25;
+}
+.small{
+  margin-top:6px;
+  color:var(--muted);
+  font-size:12.5px;
+}
+
+.footer{
+  margin-top:auto;
+  padding:12px 14px;
+  border-top:1px solid var(--stroke);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.footer span{
+  color:rgba(255,255,255,.70);
+  font-size:13px;
+}
+
+.btn{
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--stroke);
+  color:rgba(255,255,255,.88);
+  padding:7px 14px;
+  border-radius:999px;
+  cursor:pointer;
+  font-size:13px;
+}
+.btn:hover{
+  border-color:rgba(34,197,94,.55);
+  color:var(--accent);
+}
+
+.note{
+  margin-top:14px;
+  text-align:center;
+  color:rgba(255,255,255,.55);
+  font-size:12px;
+}
+
+/* Lightbox */
+.modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.74);
+  padding:18px;
+  z-index:999;
+}
+.modal.open{ display:flex; }
+
+.modalBox{
+  width:min(1000px, 96vw);
+  border-radius:22px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.16);
+  background: rgba(10,15,25,.96);
+  box-shadow: 0 25px 80px rgba(0,0,0,.75);
+}
+.modalTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:12px 14px;
+  border-bottom:1px solid rgba(255,255,255,.10);
+}
+.modalTitle{
+  font-size:14px;
+  color:rgba(255,255,255,.90);
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+.modalImg{
+  width:100%;
+  height:auto;
+  display:block;
+  background:#0b1220;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+  <div class="topbar">
+    <div>
+      <h1>Healthy Millet Recipe Cards</h1>
+      <div class="sub">Search • View full image</div>
+    </div>
+
+    <div class="controls">
+      <div class="pill">
+        🔎
+        <input id="search" type="text" placeholder="Search recipe name..." />
+      </div>
+      <div class="count">Showing: <span id="count">16</span>/16</div>
+    </div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="note"> <b></b> </div>
+</div>
+
+<!-- Lightbox -->
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modalBox" role="dialog" aria-modal="true">
+    <div class="modalTop">
+      <div class="modalTitle" id="modalTitle">Preview</div>
+      <button class="btn" id="closeBtn">Close ✕</button>
+    </div>
+    <img class="modalImg" id="modalImg" alt="Full image preview" />
+  </div>
+</div>
+
+<script>
+  // ✅ Put these image files in the SAME folder as index.html
+  // If any image name is slightly different, update it here.
+
+  const cards = [
+    { file: "WhatsApp Image 2026-01-01 at 10.48.06 PM.jpeg",      name: "Foxtail Millet Vegetable Soup" },
+    { file: "WhatsApp Image 2026-01-01 at 10.48.06 PM (1).jpeg",  name: "Foxtail Millet Poha" },
+    { file: "WhatsApp Image 2026-01-01 at 10.48.07 PM.jpeg",      name: "Palak Sabji" },
+    { file: "WhatsApp Image 2026-01-01 at 10.48.07 PM (1).jpeg",  name: "Moong Dal Chilla" },
+
+    { file: "WhatsApp Image 2026-01-01 at 10.48.07 PM (2).jpeg",  name: "Moong Dal Curry" },
+    { file: "WhatsApp Image 2026-01-01 at 10.48.08 PM.jpeg",      name: "Karela Fry" },
+    { file: "WhatsApp Image 2026-01-01 at 10.48.08 PM (1).jpeg",  name: "Barley Vegetable Dosa" },
+    { file: "WhatsApp Image 2026-01-01 at 10.48.08 PM (2).jpeg",  name: "Foxtail Millet Idli" },
+
+    { file: "WhatsApp Image 2026-01-01 at 10.48.09 PM.jpeg",      name: "Kodo Millet Upma" },
+    { file: "WhatsApp Image 2026-01-01 at 10.48.09 PM (1).jpeg",  name: "Barley / Jowar / Bajra Roti" },
+    { file: "WhatsApp Image 2026-01-01 at 10.48.09 PM (2).jpeg",  name: "Baingan Bharta" },
+    { file: "WhatsApp Image 2026-01-01 at 10.48.10 PM.jpeg",      name: "Tomato Rasam" },
+
+    { file: "WhatsApp Image 2026-01-01 at 10.48.10 PM (1).jpeg",  name: "Gobi Carrot Soup" },
+    { file: "WhatsApp Image 2026-01-01 at 10.48.10 PM (2).jpeg",  name: "Moringa Leaf Soup" },
+    { file: "WhatsApp Image 2026-01-01 at 10.48.10 PM (3).jpeg",  name: "Moong Dal Soup" },
+    { file: "WhatsApp Image 2026-01-01 at 10.48.11 PM.jpeg",      name: "Jowar Dosa" }
+  ];
+
+  const grid = document.getElementById("grid");
+  const search = document.getElementById("search");
+  const count = document.getElementById("count");
+
+  const modal = document.getElementById("modal");
+  const modalImg = document.getElementById("modalImg");
+  const modalTitle = document.getElementById("modalTitle");
+  const closeBtn = document.getElementById("closeBtn");
+
+  function openModal(item){
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    modalTitle.textContent = item.name;
+    modalImg.src = encodeURI(item.file); // spaces/() safe
+  }
+  function closeModal(){
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    modalImg.src = "";
+  }
+
+  closeBtn.addEventListener("click", closeModal);
+  modal.addEventListener("click", (e)=>{ if(e.target === modal) closeModal(); });
+  window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") closeModal(); });
+
+  function render(list){
+    grid.innerHTML = "";
+    list.forEach((item, idx) => {
+      const cardNumber = String(cards.indexOf(item)+1).padStart(2,"0");
+
+      const el = document.createElement("div");
+      el.className = "card";
+      el.setAttribute("tabindex", "0");
+      el.innerHTML = `
+        <img class="thumb" src="${encodeURI(item.file)}" alt="${item.name}" loading="lazy">
+        <div class="body">
+          <div class="title">${item.name}</div>
+          <div class="small">${item.file}</div>
+        </div>
+        <div class="footer">
+          <span>Recipe Card ${cardNumber}</span>
+          <button class="btn viewBtn" type="button">View</button>
+        </div>
+      `;
+
+      // Click image or view button to open
+      el.querySelector(".thumb").addEventListener("click", ()=>openModal(item));
+      el.querySelector(".viewBtn").addEventListener("click", ()=>openModal(item));
+
+      // keyboard access
+      el.addEventListener("keydown", (e)=>{
+        if(e.key === "Enter" || e.key === " "){
+          e.preventDefault();
+          openModal(item);
+        }
+      });
+
+      grid.appendChild(el);
+    });
+
+    count.textContent = list.length;
+  }
+
+  // Search by recipe name or filename
+  search.addEventListener("input", ()=>{
+    const q = search.value.trim().toLowerCase();
+    const filtered = cards.filter(x =>
+      x.name.toLowerCase().includes(q) || x.file.toLowerCase().includes(q)
+    );
+    render(filtered);
+  });
+
+  // Initial render
+  render(cards);
+</script>
+</body>
+</html>
